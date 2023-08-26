@@ -1,0 +1,48 @@
+.expenseItem {
+  display: flex;
+  gap: 10px;
+  box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px,
+    rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+  /* border-radius: 10px; */
+  margin-bottom: 16px;
+}
+
+
+.expenseItem__name {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0;
+  text-transform: capitalize;
+}
+.expenseItem__price {
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  font-size: 18px;
+  box-shadow: rgba(9, 30, 66, 0.25) 0px 1px 1px,
+    rgba(9, 30, 66, 0.13) 0px 0px 1px 1px;
+  border-radius: 10px;
+  height: max-content;
+}
+.expenseItem__icons {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 10px 5px;
+}
+
+.expenseItem__icons i {
+  cursor: pointer;
+  transition: all 0.25s ease-in-out;
+  padding: 5px;
+}
+
+.expenseItem__icons .bi-trash3:hover {
+  color: rgb(245, 64, 64);
+}
+
+.expenseItem__icons .bi-pencil-square:hover {
+  color: lightblue;
+}
