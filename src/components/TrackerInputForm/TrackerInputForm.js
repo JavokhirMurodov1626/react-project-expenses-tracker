@@ -1,7 +1,6 @@
 import styles from "./TrackerInputForm.module.css";
 import { useEffect, useState, useRef } from "react";
 import { createPortal } from "react-dom";
-import { v4 as uuidv4 } from "uuid";
 
 function TrackerInputFrom({ onAddExpense, selectedExpense }) {
   const [expenseTitle, setExpenseTitle] = useState("");
