@@ -2,12 +2,13 @@ import styles from "./TrackerInputForm.module.css";
 import { useEffect, useState, useRef } from "react";
 import { createPortal } from "react-dom";
 
-function TrackerInputFrom({ onAddExpense, selectedExpense }) {
+function TrackerInputFrom({ onAddExpense, selectedExpense,expensesList }) {
   const [expenseTitle, setExpenseTitle] = useState("");
   const [expensePrice, setExpensePrice] = useState("");
   const [expenseDate, setExpenseDate] = useState("");
   const [isUpdating, setIsUpdating] = useState(false);
   const [hasError, setHasError] = useState(false);
+  const [error, setError]=useState(null)
   let inputRef = useRef(null);
 
   useEffect(() => {
@@ -30,23 +31,34 @@ function TrackerInputFrom({ onAddExpense, selectedExpense }) {
           },
           body: JSON.stringify(data),
         }
-    
       );
-      console.log(response)
+      const fetchedData= await response.json()
+      
+      if(response.status!==200 ||  fetchedData==null){
+       throw new Error('something went wrong!')
+      }else{
+        data.id=fetchedData.name;
+        onAddExpense(data)
+      }
+      
     }catch(e){
-      console.log(e)
+      setError(e.message)
+      console.log(e.message)
     }
   };
 
   const expenseTitleHandler = (event) => {
     setExpenseTitle(event.target.value);
   };
+
   const expensePriceHandler = (event) => {
     setExpensePrice(event.target.value);
   };
+
   const expenseDateHandler = (event) => {
     setExpenseDate(event.target.value);
   };
+
   const exepenseResetHandler = () => {
     setExpenseDate("");
     setExpensePrice("");
@@ -63,8 +75,6 @@ function TrackerInputFrom({ onAddExpense, selectedExpense }) {
         price: expensePrice,
         date: expenseDate,
       };
-
-      // onAddExpense(data);
       sendExpense(data)
       setExpenseDate("");
       setExpensePrice("");

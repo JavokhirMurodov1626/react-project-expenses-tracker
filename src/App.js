@@ -27,7 +27,7 @@ function App() {
       });
       setSelectedExpense(null);
     } else {
-      setExpenses((previousExpenses) => [expenseData, ...previousExpenses]);
+      setExpenses((previousExpenses) => [ ...previousExpenses,expenseData]);
     }
   };
 
@@ -62,6 +62,7 @@ function App() {
         onAddExpense={addExpenseHandler}
         onUpdate={updateExpenseHandler}
         selectedExpense={selectedExpense}
+        expensesList={expenses}
       />
       <FilterComponent
         onChangeYear={changeYearHandler}

@@ -43,9 +43,7 @@ function ExpenseItemList({ expenses,onDeleteItem,onUpdateItem,onGetExpenses }) {
 
   //generating content for filtered list section
   let content;
-  if (!isLoading && expenses.length === 0) {
-    content = <p className="text-center">There is no expenses yet!</p>;
-  } else if (!isLoading && expenses.length > 0 && !error) {
+   if (!isLoading && expenses.length > 0 && !error) {
     content = expenses.map((expense) => (
       <ExpenseItem
         key={expense.id}
@@ -54,6 +52,9 @@ function ExpenseItemList({ expenses,onDeleteItem,onUpdateItem,onGetExpenses }) {
         onUpdate={onUpdateItem}
       />
     ));
+  }
+  else if (!isLoading && expenses.length === 0) {
+    content = <p className="text-center">There is no expenses yet!</p>;
   } else if (!isLoading && error) {
     content = <p className="text-center">{error}</p>;
   } else if (isLoading) {
