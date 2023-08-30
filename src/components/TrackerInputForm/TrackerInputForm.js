@@ -1,6 +1,6 @@
 import styles from "./TrackerInputForm.module.css";
-import { useEffect, useState,useRef } from "react";
-import { createPortal } from 'react-dom';
+import { useEffect, useState, useRef } from "react";
+import { createPortal } from "react-dom";
 import { v4 as uuidv4 } from "uuid";
 
 function TrackerInputFrom({ onAddExpense, selectedExpense }) {
@@ -9,7 +9,7 @@ function TrackerInputFrom({ onAddExpense, selectedExpense }) {
   const [expenseDate, setExpenseDate] = useState("");
   const [isUpdating, setIsUpdating] = useState(false);
   const [hasError, setHasError] = useState(false);
-  let inputRef=useRef(null)
+  let inputRef = useRef(null);
 
   useEffect(() => {
     if (selectedExpense) {
@@ -19,6 +19,25 @@ function TrackerInputFrom({ onAddExpense, selectedExpense }) {
       setExpenseDate(selectedExpense.date);
     }
   }, [selectedExpense]);
+
+  const sendExpense = async (data) => {
+    try{
+      const response = await fetch(
+        "https://react-expenses-tracker-ad23f-default-rtdb.firebaseio.com/expenses.json",
+        {
+          method: "POST",
+          headers: {
+            "Content-type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+    
+      );
+      console.log(response)
+    }catch(e){
+      console.log(e)
+    }
+  };
 
   const expenseTitleHandler = (event) => {
     setExpenseTitle(event.target.value);
@@ -41,41 +60,44 @@ function TrackerInputFrom({ onAddExpense, selectedExpense }) {
       setHasError(true);
     } else {
       const data = {
-        id: selectedExpense ? selectedExpense.id : uuidv4(),
         title: expenseTitle,
         price: expensePrice,
         date: expenseDate,
       };
 
-      onAddExpense(data);
+      // onAddExpense(data);
+      sendExpense(data)
       setExpenseDate("");
       setExpensePrice("");
       setExpenseTitle("");
       setIsUpdating(false);
     }
   };
+
   const cancelErrorHandler = () => {
     setHasError(false);
   };
+
   return (
     <>
       {hasError && (
         <>
-        {
-          createPortal(<div className={styles.overlay} onClick={cancelErrorHandler}></div>,document.getElementById('overlay'))
-        }
-        {
-          createPortal( <div className={styles.errorModal}>
-            <p>You have to fill all fields!!</p>
-            <button
-              onClick={cancelErrorHandler}
-              className="btn btn-outline-primary"
-            >
-              Cancel
-            </button>
-          </div>,document.getElementById('error-modal'))
-          
-        }
+          {createPortal(
+            <div className={styles.overlay} onClick={cancelErrorHandler}></div>,
+            document.getElementById("overlay")
+          )}
+          {createPortal(
+            <div className={styles.errorModal}>
+              <p>You have to fill all fields!!</p>
+              <button
+                onClick={cancelErrorHandler}
+                className="btn btn-outline-primary"
+              >
+                Cancel
+              </button>
+            </div>,
+            document.getElementById("error-modal")
+          )}
         </>
       )}
 
@@ -88,7 +110,7 @@ function TrackerInputFrom({ onAddExpense, selectedExpense }) {
             Expense Title
           </label>
           <input
-          ref={inputRef}
+            ref={inputRef}
             value={expenseTitle}
             id="expenseName"
             className="form-control"
