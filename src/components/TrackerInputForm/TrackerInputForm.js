@@ -1,6 +1,7 @@
 import styles from "./TrackerInputForm.module.css";
 import { useEffect, useState, useRef } from "react";
 import { createPortal } from "react-dom";
+import useHttp from '../../hooks/httpRequest'
 
 function TrackerInputFrom({ onAddExpense, selectedExpense,onUpdate}) {
   const [expenseTitle, setExpenseTitle] = useState("");
@@ -8,7 +9,14 @@ function TrackerInputFrom({ onAddExpense, selectedExpense,onUpdate}) {
   const [expenseDate, setExpenseDate] = useState("");
   const [isUpdating, setIsUpdating] = useState(false);
   const [hasError, setHasError] = useState(false);
-  const [error, setError]=useState(null);
+
+  const {error, isLoading,sendRequest:sendExpense}=useHttp({
+    url:"https://react-expenses-tracker-ad23f-default-rtdb.firebaseio.com/expenses.json",
+    method: "POST",
+    headers: {
+      "Content-type": "application/json",
+    }
+  },onAddExpense)
 
   let inputRef = useRef(null);
 
@@ -20,33 +28,6 @@ function TrackerInputFrom({ onAddExpense, selectedExpense,onUpdate}) {
       setExpenseDate(selectedExpense.date);
     }
   }, [selectedExpense]);
-
-  const sendExpense = async (data) => {
-    try{
-      const response = await fetch(
-        "https://react-expenses-tracker-ad23f-default-rtdb.firebaseio.com/expenses.json",
-        {
-          method: "POST",
-          headers: {
-            "Content-type": "application/json",
-          },
-          body: JSON.stringify(data),
-        }
-      );
-      const fetchedData= await response.json()
-      
-      if(response.status!==200 ||  fetchedData==null){
-       throw new Error('something went wrong!')
-      }else{
-        data.id=fetchedData.name;
-        onAddExpense(data)
-      }
-      
-    }catch(e){
-      setError(e.message)
-      console.log(e.message)
-    }
-  };
 
   const updateExpense= async(data)=>{
     let response=await fetch(`https://react-expenses-tracker-ad23f-default-rtdb.firebaseio.com/expenses/${data.id}.json`,{
@@ -91,7 +72,7 @@ function TrackerInputFrom({ onAddExpense, selectedExpense,onUpdate}) {
         date: expenseDate,
       };
 
-      if(selectedExpense.id){
+      if(selectedExpense){
         data.id=selectedExpense.id;
         updateExpense(data)
       }else{

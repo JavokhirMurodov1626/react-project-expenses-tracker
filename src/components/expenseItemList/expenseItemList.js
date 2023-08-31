@@ -13,7 +13,6 @@ function ExpenseItemList({ expenses,onDeleteItem,onUpdateItem,onGetExpenses }) {
       );
       const data = await response.json();
       if (response.status === 200 && data !== null) {
-
         let expensesList = [];
 
         for (let key in data) {
@@ -28,7 +27,6 @@ function ExpenseItemList({ expenses,onDeleteItem,onUpdateItem,onGetExpenses }) {
         }
 
         onGetExpenses(expensesList);
-
         setIsLoading(false);
       } else {
         throw new Error("Something went wrong!");

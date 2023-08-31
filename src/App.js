@@ -11,9 +11,11 @@ function App() {
   const [selectedYear, setSelectedYear] = useState("2023");
 
   const addExpenseHandler = (expenseData) => {
+
     let updatingExpense = expenses.find(
       (expense) => expense.id === expenseData.id
     );
+
     if (updatingExpense) {
       setExpenses((previousExpenses) => {
         return previousExpenses.map((expense) => {
@@ -27,12 +29,12 @@ function App() {
       });
       setSelectedExpense(null);
     } else {
-      setExpenses((previousExpenses) => [...previousExpenses, expenseData]);
+      setExpenses((previousExpenses) => [...previousExpenses,expenseData]);
     }
   };
 
   const deleteExpenseItem = async (expenseId) => {
-    let response = await fetch(
+    await fetch(
       `https://react-expenses-tracker-ad23f-default-rtdb.firebaseio.com/expenses/${expenseId}.json`,
       {
         method: "DELETE",
@@ -42,10 +44,11 @@ function App() {
       }
     );
 
-    let updatedExpenseList = expenses.filter(
-      (expense) => expense.id !== expenseId
-    );
-    setExpenses(updatedExpenseList);
+    setExpenses((previousExpenses)=>{
+      return previousExpenses.filter(expense=>expense.id!==expenseId)
+    });
+
+    setSelectedExpense(null);
   };
 
   const updateSelectedExpenseHandler = (expenseId) => {
@@ -54,16 +57,16 @@ function App() {
   };
 
   const updateExpenseHandler = (expenseData) => {
-    setExpenses((previousExpenses=>{
-      return previousExpenses.map((expense)=>{
+    setExpenses((previousExpenses) => {
+      return previousExpenses.map((expense) => {
         if (expense.id === expenseData.id) {
           expense.price = expenseData.price;
           expense.title = expenseData.title;
           expense.date = expenseData.date;
         }
-        return expense
-      })
-    }))
+        return expense;
+      });
+    });
   };
 
   const changeYearHandler = (year) => {
