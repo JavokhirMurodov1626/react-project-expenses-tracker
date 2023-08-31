@@ -2,13 +2,14 @@ import styles from "./TrackerInputForm.module.css";
 import { useEffect, useState, useRef } from "react";
 import { createPortal } from "react-dom";
 
-function TrackerInputFrom({ onAddExpense, selectedExpense,expensesList }) {
+function TrackerInputFrom({ onAddExpense, selectedExpense,onUpdate}) {
   const [expenseTitle, setExpenseTitle] = useState("");
   const [expensePrice, setExpensePrice] = useState("");
   const [expenseDate, setExpenseDate] = useState("");
   const [isUpdating, setIsUpdating] = useState(false);
   const [hasError, setHasError] = useState(false);
-  const [error, setError]=useState(null)
+  const [error, setError]=useState(null);
+
   let inputRef = useRef(null);
 
   useEffect(() => {
@@ -47,6 +48,18 @@ function TrackerInputFrom({ onAddExpense, selectedExpense,expensesList }) {
     }
   };
 
+  const updateExpense= async(data)=>{
+    let response=await fetch(`https://react-expenses-tracker-ad23f-default-rtdb.firebaseio.com/expenses/${data.id}.json`,{
+      method:"PUT",
+      headers:{
+        "Content-Type":"application/json"
+      },
+      body:JSON.stringify(data)
+    })
+    let fetchedData= await response.json();
+    onUpdate(fetchedData)
+  }
+
   const expenseTitleHandler = (event) => {
     setExpenseTitle(event.target.value);
   };
@@ -65,20 +78,30 @@ function TrackerInputFrom({ onAddExpense, selectedExpense,expensesList }) {
     setExpenseTitle("");
     setIsUpdating(false);
   };
+
   const submitFormHandler = (event) => {
     event.preventDefault();
     if (expenseTitle === "" || expenseDate === "" || expensePrice === "") {
       setHasError(true);
     } else {
+
       const data = {
         title: expenseTitle,
         price: expensePrice,
         date: expenseDate,
       };
-      sendExpense(data)
+
+      if(selectedExpense.id){
+        data.id=selectedExpense.id;
+        updateExpense(data)
+      }else{
+        sendExpense(data)
+      }
+
       setExpenseDate("");
       setExpensePrice("");
       setExpenseTitle("");
+
       setIsUpdating(false);
     }
   };

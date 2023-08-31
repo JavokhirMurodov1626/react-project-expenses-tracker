@@ -27,20 +27,43 @@ function App() {
       });
       setSelectedExpense(null);
     } else {
-      setExpenses((previousExpenses) => [ ...previousExpenses,expenseData]);
+      setExpenses((previousExpenses) => [...previousExpenses, expenseData]);
     }
   };
 
-  const deleteExpenseItem = (expenseId) => {
+  const deleteExpenseItem = async (expenseId) => {
+    let response = await fetch(
+      `https://react-expenses-tracker-ad23f-default-rtdb.firebaseio.com/expenses/${expenseId}.json`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
     let updatedExpenseList = expenses.filter(
       (expense) => expense.id !== expenseId
     );
     setExpenses(updatedExpenseList);
   };
 
-  const updateExpenseHandler = (expenseId) => {
+  const updateSelectedExpenseHandler = (expenseId) => {
     let selected = expenses.find((expense) => expense.id === expenseId);
     setSelectedExpense(selected);
+  };
+
+  const updateExpenseHandler = (expenseData) => {
+    setExpenses((previousExpenses=>{
+      return previousExpenses.map((expense)=>{
+        if (expense.id === expenseData.id) {
+          expense.price = expenseData.price;
+          expense.title = expenseData.title;
+          expense.date = expenseData.date;
+        }
+        return expense
+      })
+    }))
   };
 
   const changeYearHandler = (year) => {
@@ -52,9 +75,9 @@ function App() {
       new Date(expense.date).getFullYear().toString() === selectedYear
   );
 
-  const getExpenses=useCallback((expenses)=>{
-    setExpenses(expenses)
-  },[])
+  const getExpenses = useCallback((expenses) => {
+    setExpenses(expenses);
+  }, []);
 
   return (
     <div className="container">
@@ -62,7 +85,6 @@ function App() {
         onAddExpense={addExpenseHandler}
         onUpdate={updateExpenseHandler}
         selectedExpense={selectedExpense}
-        expensesList={expenses}
       />
       <FilterComponent
         onChangeYear={changeYearHandler}
@@ -70,7 +92,12 @@ function App() {
       />
       <ExpensesChart expenses={filteredExpenses} />
 
-      <ExpenseItemList onGetExpenses={getExpenses} expenses={filteredExpenses} onDeleteItem={deleteExpenseItem} onUpdateItem={updateExpenseHandler}/>
+      <ExpenseItemList
+        onGetExpenses={getExpenses}
+        expenses={filteredExpenses}
+        onDeleteItem={deleteExpenseItem}
+        onUpdateItem={updateSelectedExpenseHandler}
+      />
     </div>
   );
 }
