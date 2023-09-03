@@ -22,7 +22,7 @@ function ExpensesChart({ expenses }) {
   });
 
   return (
-    <section className="col-6 mx-auto mt-3">
+    <section className="col-xxl-6 col-md-11 mx-auto mt-3">
       <Chart dataPoints={chartDataPoints} />
     </section>
   );

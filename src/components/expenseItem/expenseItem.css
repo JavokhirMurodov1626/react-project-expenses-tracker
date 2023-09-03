@@ -46,3 +46,22 @@
 .expenseItem__icons .bi-pencil-square:hover {
   color: lightblue;
 }
+@media screen and (max-width:425px) {
+  .expenseItem__price {
+    font-size: 16px;
+  }
+  .expenseItem__name {
+    font-size: 16px;
+  }
+}
+@media screen and (max-width:320px) {
+  .expenseItem__price {
+    font-size: 14px;
+  }
+  .expenseItem__name {
+    font-size: 14px;
+  }
+  .expenseItem__icons {
+    padding: 0;
+  }
+}

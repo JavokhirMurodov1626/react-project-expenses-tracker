@@ -10,13 +10,7 @@ function TrackerInputFrom({ onAddExpense, selectedExpense,onUpdate}) {
   const [isUpdating, setIsUpdating] = useState(false);
   const [hasError, setHasError] = useState(false);
 
-  const {error, isLoading,sendRequest:sendExpense}=useHttp({
-    url:"https://react-expenses-tracker-ad23f-default-rtdb.firebaseio.com/expenses.json",
-    method: "POST",
-    headers: {
-      "Content-type": "application/json",
-    }
-  },onAddExpense)
+  const {error, isLoading,sendRequest:sendExpense}=useHttp(onAddExpense)
 
   let inputRef = useRef(null);
 
@@ -76,7 +70,14 @@ function TrackerInputFrom({ onAddExpense, selectedExpense,onUpdate}) {
         data.id=selectedExpense.id;
         updateExpense(data)
       }else{
-        sendExpense(data)
+        sendExpense({
+          url:"https://react-expenses-tracker-ad23f-default-rtdb.firebaseio.com/expenses.json",
+          method: "POST",
+          headers: {
+            "Content-type": "application/json",
+          },
+          body:data
+        })
       }
 
       setExpenseDate("");
@@ -116,7 +117,7 @@ function TrackerInputFrom({ onAddExpense, selectedExpense,onUpdate}) {
 
       <form
         onSubmit={submitFormHandler}
-        className={`${styles.form} col-6 px-3 py-5 mx-auto mt-5`}
+        className={`${styles.form} col-xxl-6 col-md-11 px-3 py-5 mx-auto mt-5`}
       >
         <div className="mb-3">
           <label htmlFor="expenseName" className="mb-2 fw-bold">

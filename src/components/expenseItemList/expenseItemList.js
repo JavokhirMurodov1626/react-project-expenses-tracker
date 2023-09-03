@@ -61,6 +61,6 @@ function ExpenseItemList({ expenses,onDeleteItem,onUpdateItem,onGetExpenses }) {
     content = <p className="text-center">Loading...</p>;
   }
 
-  return <section className="expenseItemList">{content}</section>;
+  return <section className="expenseItemList ">{content}</section>;
 }
 export default ExpenseItemList;

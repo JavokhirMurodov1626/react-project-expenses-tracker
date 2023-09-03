@@ -10,7 +10,7 @@ const Select = styled.select`
 
 function FilterComponent({onChangeYear,selectedYear}) {
   return (
-    <div className="col-6 mx-auto mt-3">
+    <div className="col-xxl-6 col-md-11 mx-auto mt-3">
       <Select className="form-select" value={selectedYear} onChange={(e)=>onChangeYear(e.target.value)}>
         {years.map((year, index) => (
           <option key={index} value={year}>

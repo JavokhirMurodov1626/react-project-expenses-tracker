@@ -84,6 +84,7 @@ function App() {
 
   return (
     <div className="container">
+    <h1 className="text-center pt-3">Expense Tracker</h1>
       <TrackerInputForm
         onAddExpense={addExpenseHandler}
         onUpdate={updateExpenseHandler}
